@@ -1,5 +1,7 @@
 package by.oneka.aston.list;
 
+import by.oneka.aston.Exceptions;
+
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -9,6 +11,7 @@ import java.util.Iterator;
  * @param <E> the Type of object in this list
  * @author Ivan Batskalevich
  */
+//TODO ArrayList::get
 public class ArrayList<E> implements Iterable<E> {
 
     private E[] array;
@@ -58,7 +61,7 @@ public class ArrayList<E> implements Iterable<E> {
             add(object);
             return;
         }
-        checkBounds(index);
+        Exceptions.checkBounds(index,lastPosition);
         if (lastPosition + 1 >= array.length)
             expandArray();
         System.arraycopy(array, index, array, index + 1, lastPosition - index);
@@ -70,11 +73,11 @@ public class ArrayList<E> implements Iterable<E> {
      * Removes the object at the specified position in this list.
      * Shifts any subsequent objects to the left.
      *
-     * @param index - of the object to be removed
+     * @param index - index of the object to be removed
      * @throws IndexOutOfBoundsException - if index is wrong
      */
     public void remove(int index) {
-        checkBounds(index);
+        Exceptions.checkBounds(index,lastPosition);
         System.arraycopy(array, index + 1, array, index, lastPosition - index - 1);
         reduceArray();
         lastPosition--;
@@ -93,15 +96,15 @@ public class ArrayList<E> implements Iterable<E> {
     /**
      * Replaces the object at the position in this list with the new object.
      *
-     * @param index - position of object
-     * @param obj   - to be stored
+     * @param index  - position of object
+     * @param object - to be stored
      * @return the object previously at the specified position
      * @throws IndexOutOfBoundsException - if index is wrong
      */
-    public E set(E obj, int index) {
-        checkBounds(index);
+    public E set(E object, int index) {
+        Exceptions.checkBounds(index,lastPosition);
         E lastObj = array[index];
-        array[index] = obj;
+        array[index] = object;
         return lastObj;
     }
 
@@ -116,7 +119,7 @@ public class ArrayList<E> implements Iterable<E> {
     }
 
     /**
-     * Removes all the objects from this list.
+     * Removes all the objects from list.
      */
     public void clear() {
         Arrays.fill(array, null);
@@ -129,6 +132,7 @@ public class ArrayList<E> implements Iterable<E> {
      *
      * @param obj - the object being checked
      */
+    @SuppressWarnings("all")
     public boolean contains(E obj) {
         return Arrays.stream(array).anyMatch(object -> object.equals(obj));
     }
@@ -141,6 +145,7 @@ public class ArrayList<E> implements Iterable<E> {
      * @param comparator - used to compare list objects
      * @throws NullPointerException - if the list contains (@Code null) objects
      */
+    @SuppressWarnings("unchecked")
     private void quickSort(int low, int high, Comparator comparator) {
         if (low >= high)
             return;
@@ -192,11 +197,6 @@ public class ArrayList<E> implements Iterable<E> {
         E[] newArray = (E[]) new Object[(int) newCapacity];
         System.arraycopy(this.array, 0, newArray, 0, array.length - 1);
         this.array = newArray;
-    }
-
-    private void checkBounds(int index) {
-        if (index < 0 || index >= lastPosition)
-            throw new IndexOutOfBoundsException(String.format("index: %d, size: %d", index, lastPosition));
     }
 
     @Override
