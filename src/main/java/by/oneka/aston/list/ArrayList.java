@@ -8,6 +8,7 @@ import java.util.Iterator;
 
 /**
  * Resizable ArrayList with QuickSort based on array.
+ *
  * @param <E> the Type of object in this list
  * @author Ivan Batskalevich
  */
@@ -47,13 +48,37 @@ public class ArrayList<E> implements Iterable<E> {
     }
 
     /**
+     * Getting index from object position.
+     *
+     * @param object - findable object.
+     * @return the index of object position
+     */
+    public int get(E object) {
+        int index = 0;
+        while (!array[index].equals(object))
+            index++;
+        return index;
+    }
+
+    /**
+     * Getting object from index position.
+     *
+     * @param index - index of object position.
+     * @return the object at the index position
+     * @throws IndexOutOfBoundsException - if index is wrong
+     */
+    public E get(int index){
+        Exceptions.checkBounds(index,array.length);
+        return array[index];
+    }
+
+    /**
      * Inserts the object at the specified position in list.
      * Shifts the object currently at that position to the right.
      * If insert in last position of the list. Adding new object to end of list.
      *
      * @param object - to be inserted
      * @param index  - position to insertion
-     *
      * @throws IndexOutOfBoundsException - if index is wrong
      */
     public void add(E object, int index) {
@@ -61,7 +86,7 @@ public class ArrayList<E> implements Iterable<E> {
             add(object);
             return;
         }
-        Exceptions.checkBounds(index,lastPosition);
+        Exceptions.checkBounds(index, lastPosition);
         if (lastPosition + 1 >= array.length)
             expandArray();
         System.arraycopy(array, index, array, index + 1, lastPosition - index);
@@ -77,7 +102,7 @@ public class ArrayList<E> implements Iterable<E> {
      * @throws IndexOutOfBoundsException - if index is wrong
      */
     public void remove(int index) {
-        Exceptions.checkBounds(index,lastPosition);
+        Exceptions.checkBounds(index, lastPosition);
         System.arraycopy(array, index + 1, array, index, lastPosition - index - 1);
         reduceArray();
         lastPosition--;
@@ -102,7 +127,7 @@ public class ArrayList<E> implements Iterable<E> {
      * @throws IndexOutOfBoundsException - if index is wrong
      */
     public E set(E object, int index) {
-        Exceptions.checkBounds(index,lastPosition);
+        Exceptions.checkBounds(index, lastPosition);
         E lastObj = array[index];
         array[index] = object;
         return lastObj;

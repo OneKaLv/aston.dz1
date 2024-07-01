@@ -10,12 +10,15 @@ import java.util.Comparator;
  * @param <E> the Type of object in this list
  * @author Ivan Batskalevich
  */
-//TODO LinkedList::get
 public class LinkedList<E> {
     /**
      * Contains head of list.
      */
     private Node<E> head;
+    /**
+     * Contains tail of list.
+     */
+    private Node<E> tail;
     /**
      * Contains size of list.
      */
@@ -28,6 +31,12 @@ public class LinkedList<E> {
      * @param object - to be appended to list.
      */
     public void addFirst(E object) {
+        if (head == null) {
+            head = new Node<>(object);
+            tail = head;
+            return;
+        }
+
         Node<E> firstNode = new Node<>(object);
         head.previous = firstNode;
         firstNode.next = head;
@@ -43,21 +52,38 @@ public class LinkedList<E> {
     public void addLast(E object) {
         if (head == null) {
             head = new Node<>(object);
+            tail = head;
             return;
         }
-
-        Node<E> currentNode = head;
-        while (currentNode.next != null)
-            currentNode = currentNode.next;
         Node<E> lastNode = new Node<>(object);
-        currentNode.next = lastNode;
-        lastNode.previous = currentNode;
+        tail.next = lastNode;
+        tail = lastNode;
         size++;
     }
 
     public boolean add(E object) {
         addLast(object);
         return true;
+    }
+
+    /**
+     * Inserts the object at the specified position in list.
+     * Shifts the object currently at that position to the right.
+     * If insert in last position of the list. Adding new object to end of list.
+     *
+     * @param object - to be inserted
+     * @param index  - position to insertion
+     * @throws IndexOutOfBoundsException - if index is wrong
+     */
+    public E add(E object, int index) {
+        Exceptions.checkBounds(index, size);
+
+        Node<E> indexNode = head;
+        for (int i = 0; i < index; i++)
+            indexNode = indexNode.next;
+        E previousValue = indexNode.value;
+        indexNode.value = object;
+        return previousValue;
     }
 
     /**
@@ -81,6 +107,7 @@ public class LinkedList<E> {
      */
     public void clear() {
         head = null;
+        size = 0;
     }
 
     /**
@@ -179,7 +206,6 @@ public class LinkedList<E> {
     private Node<E> partition(Node<E> head, Node<E> last, Comparator comparator) {
         E x = last.value;
         Node<E> i = head.previous;
-
         for (Node<E> j = head; j != last; j = j.next)
             if (comparator.compare(j.value, x) <= 0) {
                 i = (i == null) ? head : i.next;
@@ -215,6 +241,7 @@ public class LinkedList<E> {
 
     /**
      * A node of the doubly linked list
+     *
      * @param <E> the Type of object in this node
      */
     private static class Node<E> {

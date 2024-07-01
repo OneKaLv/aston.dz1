@@ -20,6 +20,8 @@ public class Main {
         System.out.println(list.getSize());
         list.remove(2);
         System.out.println(list);
+        System.out.println(list.get("Anatoliy"));
+        System.out.println(list.get(1));
         System.out.println(list.getSize());
         System.out.println(" ");
         System.out.println("__________________________________");
@@ -39,7 +41,8 @@ public class Main {
         System.out.println("list: " + testLinked);
         testLinked.sort(Comparator.naturalOrder());
         System.out.println(testLinked);
-        testLinked.clear();
+        System.out.println(testLinked);
+        System.out.println(testLinked.add("Dima",3));
         System.out.println(testLinked);
         System.out.println(" ");
         System.out.println("__________________________________");
