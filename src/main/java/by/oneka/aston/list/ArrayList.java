@@ -12,7 +12,6 @@ import java.util.Iterator;
  * @param <E> the Type of object in this list
  * @author Ivan Batskalevich
  */
-//TODO ArrayList::get
 public class ArrayList<E> implements Iterable<E> {
 
     private E[] array;
